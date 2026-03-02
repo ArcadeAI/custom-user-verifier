@@ -1,4 +1,4 @@
-# Custom User Verifier for Arcade.dev
+# Custom User Verifier for Demo Purposes
 
 > **This is a demo/testing tool, not a production auth solution.** In production, your app should pass its own user IDs (e.g. from your auth system, database, or identity provider) directly to Arcade's verification endpoint. This server exists to make it easy to test and demo Arcade's custom verifier flow without wiring up a real auth system first.
 
