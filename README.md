@@ -76,6 +76,8 @@ The mode can also be set via CLI: `--mode flexible` or `--mode protected` (overr
 ## Run locally
 
 ```bash
+uv run custom_verifier
+# or alternatively:
 uv run python app.py
 ```
 

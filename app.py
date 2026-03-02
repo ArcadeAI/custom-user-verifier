@@ -267,8 +267,12 @@ def index():
     return render_template("index.html", user_id=user_id, logged_in=logged_in, mode=MODE)
 
 
-if __name__ == "__main__":
+def main():
     print(f"Starting in {MODE} mode")
     port = int(os.environ.get("PORT", 5001))
     debug = os.environ.get("FLASK_DEBUG", "true").lower() == "true"
     app.run(host="0.0.0.0", port=port, debug=debug)
+
+
+if __name__ == "__main__":
+    main()
