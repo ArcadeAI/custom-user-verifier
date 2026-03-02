@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Authorization Error</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container narrow">
+        <div class="icon">✕</div>
+        <h1 class="error">Something went wrong</h1>
+        <p>{{ message }}</p>
+        {% if detail %}
+        <div class="error-detail">{{ detail }}</div>
+        {% endif %}
+    </div>
+</body>
+</html>
