@@ -57,14 +57,14 @@ Edit `.env`:
 
 ```
 ARCADE_API_KEY=your_arcade_api_key_here
-VERIFIER_MODE=flexible
+VERIFIER_MODE=protected
 ADMIN_SECRET=choose-a-strong-secret
 ```
 
 | Variable | Required | Description |
 |---|---|---|
 | `ARCADE_API_KEY` | Yes | Your Arcade project API key |
-| `VERIFIER_MODE` | No | `flexible` (default) or `protected` |
+| `VERIFIER_MODE` | No | `protected` (default) or `flexible` |
 | `ADMIN_SECRET` | In protected mode | Secret for the admin page |
 | `JWT_SECRET` | No | Secret for signing activation tokens (falls back to `FLASK_SECRET_KEY`) |
 | `FLASK_SECRET_KEY` | No | Secret for signing session cookies (has a dev fallback) |

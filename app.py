@@ -29,7 +29,7 @@ def get_mode():
     for i, arg in enumerate(sys.argv):
         if arg == "--mode" and i + 1 < len(sys.argv):
             return sys.argv[i + 1]
-    return os.environ.get("VERIFIER_MODE", "flexible")
+    return os.environ.get("VERIFIER_MODE", "protected")
 
 
 MODE = get_mode()
