@@ -13,6 +13,12 @@
                 {{ user_id if logged_in else 'Not logged in' }}
             </div>
         </div>
+        {% if logged_in %}
+        <form method="POST" action="/logout">
+            <button type="submit" class="logout-btn">Logout</button>
+        </form>
+        {% endif %}
+        {% if mode == 'flexible' %}
         <form method="POST">
             <input type="text" name="user_id"
                    placeholder="Enter user ID (e.g. user@example.com)"
@@ -20,13 +26,14 @@
             <br>
             <button type="submit">Set User</button>
         </form>
-        {% if logged_in %}
-        <form method="POST">
-            <input type="hidden" name="user_id" value="" />
-            <button type="submit" class="logout-btn">Logout</button>
-        </form>
         {% endif %}
         <p class="info">Verifier endpoint: <code>/auth/verify</code></p>
+        <p class="info">Mode: <code>{{ mode }}</code></p>
+        {% if mode == 'protected' %}
+        <p class="info" style="margin-top: 1rem;">
+            <a href="/admin">Admin: generate auth links</a>
+        </p>
+        {% endif %}
     </div>
 </body>
 </html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Login - Arcade User Verifier</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Login</h1>
+        {% if error %}
+        <div class="error-detail">{{ error }}</div>
+        {% endif %}
+        <form method="POST">
+            <input type="password" name="admin_secret"
+                   placeholder="Admin secret" autofocus />
+            <br>
+            <button type="submit">Sign In</button>
+        </form>
+        <p class="info"><a href="/">Home</a></p>
+    </div>
+</body>
+</html>

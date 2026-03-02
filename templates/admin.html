@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin - Arcade User Verifier</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Generate Activation Link</h1>
+        {% if generated_link %}
+        <div class="status">
+            <div class="status-label">Link for <strong>{{ generated_user_id }}</strong></div>
+            <div class="input-with-btn">
+                <input type="text" id="activation-link" value="{{ generated_link }}" readonly
+                       onclick="this.select();" />
+                <button type="button" class="copy-btn" onclick="copyLink()">Copy</button>
+            </div>
+            <p class="info">Single-use link, expires in 24 hours.</p>
+        </div>
+        {% endif %}
+        <form method="POST">
+            <label for="user_id">User ID</label>
+            <input type="text" id="user_id" name="user_id"
+                   placeholder="e.g. user@example.com" />
+            <p class="info">
+                This must match the User ID used later to call tools via Arcade
+                on behalf of this user.
+                <a href="https://docs.arcade.dev/en/guides/user-facing-agents/secure-auth-production"
+                   target="_blank">Learn more</a>
+            </p>
+            <button type="submit">Generate Link</button>
+        </form>
+        <p class="info"><a href="/">Home</a></p>
+    </div>
+<script>
+function copyLink() {
+    const input = document.getElementById('activation-link');
+    navigator.clipboard.writeText(input.value).then(() => {
+        const btn = document.querySelector('.copy-btn');
+        btn.textContent = 'Copied!';
+        setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+    });
+}
+</script>
+</body>
+</html>

@@ -4,15 +4,36 @@ A minimal Flask server that implements a [custom user verifier](https://docs.arc
 
 When your app's users authorize a tool, Arcade redirects their browser to this server's `/auth/verify` endpoint with a `flow_id`. The server confirms the user's identity back to Arcade using the [Arcade Python SDK](https://github.com/ArcadeAI/arcade-py), then renders a success or error page.
 
-## How it works
+## Modes
 
-1. A user sets their ID on the home page (or via `/login/<user_id>`)
-2. The ID is stored in a session cookie
-3. When Arcade redirects to `/auth/verify?flow_id=...`, the server reads the user ID from the session and calls `client.auth.confirm_user(flow_id, user_id)`
-4. Arcade validates the user ID matches the one that started the auth flow
-5. On success, the server renders a confirmation page
+The server supports two operating modes:
 
-The user ID used here **must match** the `user_id` passed when your app starts the authorization flow (e.g. via `client.tools.authorize(tool_name=..., user_id=...)` or the `Arcade-User-ID` header on a gateway).
+### Flexible mode (default)
+
+Best for solo testing and quick demos. The home page has a free-text input where you type any user ID to set your session.
+
+```bash
+uv run python app.py
+# or explicitly:
+uv run python app.py --mode flexible
+```
+
+### Protected mode
+
+Best for multi-user demos and shared environments. An admin generates signed, single-use activation links for each user. End users click the link to get a session -- they never choose their own ID.
+
+```bash
+uv run python app.py --mode protected
+```
+
+**Admin flow:**
+
+1. Visit `/admin` and enter the user ID + admin secret
+2. Copy the generated activation link
+3. Share the link with the user
+4. The user clicks the link, which sets their session cookie automatically
+
+Links are single-use and expire after 24 hours.
 
 ## Setup
 
@@ -26,7 +47,7 @@ uv sync
 
 ## Configuration
 
-Copy the example env file and add your Arcade API key:
+Copy the example env file and add your values:
 
 ```bash
 cp .env.example .env
@@ -36,15 +57,21 @@ Edit `.env`:
 
 ```
 ARCADE_API_KEY=your_arcade_api_key_here
-FLASK_SECRET_KEY=change-this-to-a-random-secret
+VERIFIER_MODE=flexible
+ADMIN_SECRET=choose-a-strong-secret
 ```
 
 | Variable | Required | Description |
 |---|---|---|
 | `ARCADE_API_KEY` | Yes | Your Arcade project API key |
+| `VERIFIER_MODE` | No | `flexible` (default) or `protected` |
+| `ADMIN_SECRET` | In protected mode | Secret for the admin page |
+| `JWT_SECRET` | No | Secret for signing activation tokens (falls back to `FLASK_SECRET_KEY`) |
 | `FLASK_SECRET_KEY` | No | Secret for signing session cookies (has a dev fallback) |
 | `PORT` | No | Server port (default: `5001`) |
 | `FLASK_DEBUG` | No | Enable debug mode (default: `true`) |
+
+The mode can also be set via CLI: `--mode flexible` or `--mode protected` (overrides the env var).
 
 ## Run locally
 
@@ -70,13 +97,24 @@ https://your-ngrok-url.ngrok-free.app/auth/verify
 
 ## Routes
 
-| Route | Method | Description |
-|---|---|---|
-| `/` | GET, POST | Home page with user ID input form |
-| `/auth/verify` | GET | Verifier endpoint (called by Arcade) |
-| `/login/<user_id>` | GET | Quick login via URL (convenience shortcut) |
+| Route | Method | Modes | Description |
+|---|---|---|---|
+| `/` | GET, POST | Both | Home page (shows input form in flexible, status only in protected) |
+| `/auth/verify` | GET | Both | Verifier endpoint (called by Arcade) |
+| `/admin` | GET, POST | Protected | Admin page to generate activation links |
+| `/auth/activate` | GET | Protected | Activates a session from a signed JWT link |
+
+## How verification works
+
+1. A user's session contains their `user_id` (set via the form in flexible mode, or via an activation link in protected mode)
+2. When Arcade redirects to `/auth/verify?flow_id=...`, the server reads `user_id` from the session
+3. The server calls `client.auth.confirm_user(flow_id, user_id)` via the Arcade SDK
+4. Arcade validates the `user_id` matches the one that started the auth flow
+5. On success, the server renders a confirmation page
+
+The `user_id` here **must match** the `user_id` passed when your app starts the authorization flow (e.g. via `client.tools.authorize(tool_name=..., user_id=...)` or the `Arcade-User-ID` header on a gateway).
 
 ## Learn more
 
-- [Secure Auth in Production](https://docs.arcade.dev/en/guides/user-facing-agents/secure-auth-production) - Arcade docs on custom user verifiers
+- [Secure Auth in Production](https://docs.arcade.dev/en/guides/user-facing-agents/secure-auth-production) -- Arcade docs on custom user verifiers
 - [Arcade Python SDK](https://github.com/ArcadeAI/arcade-py)

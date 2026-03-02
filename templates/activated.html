@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Session Activated</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="icon checkmark">✓</div>
+        <h1 class="success">Session Activated</h1>
+        <p>You are now signed in as:</p>
+        <div class="status">
+            <div class="status-value">{{ user_id }}</div>
+        </div>
+        <p>Tool authorization requests will be verified with this identity.</p>
+        <p class="info"><a href="/">Home</a></p>
+    </div>
+</body>
+</html>
