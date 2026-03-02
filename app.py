@@ -36,7 +36,7 @@ MODE = get_mode()
 assert MODE in ("flexible", "protected"), f"Invalid mode: {MODE!r}. Must be 'flexible' or 'protected'."
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("FLASK_SECRET_KEY", "dev-secret-key-change-in-production")
+app.secret_key = os.environ.get("FLASK_SECRET_KEY", "dev-secret-key-change-me")
 
 JWT_SECRET = os.environ.get("JWT_SECRET", app.secret_key)
 ADMIN_SECRET = os.environ.get("ADMIN_SECRET")

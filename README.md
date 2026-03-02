@@ -1,5 +1,7 @@
 # Custom User Verifier for Arcade.dev
 
+> **This is a demo/testing tool, not a production auth solution.** In production, your app should pass its own user IDs (e.g. from your auth system, database, or identity provider) directly to Arcade's verification endpoint. This server exists to make it easy to test and demo Arcade's custom verifier flow without wiring up a real auth system first.
+
 A minimal Flask server that implements a [custom user verifier](https://docs.arcade.dev/en/guides/user-facing-agents/secure-auth-production) for Arcade.dev.
 
 When your app's users authorize a tool, Arcade redirects their browser to this server's `/auth/verify` endpoint with a `flow_id`. The server confirms the user's identity back to Arcade using the [Arcade Python SDK](https://github.com/ArcadeAI/arcade-py), then renders a success or error page.
