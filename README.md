@@ -8,28 +8,28 @@ When your app's users authorize a tool, Arcade redirects their browser to this s
 
 The server supports two operating modes:
 
-### Flexible mode (default)
-
-Best for solo testing and quick demos. The home page has a free-text input where you type any user ID to set your session.
-
-```bash
-uv run python app.py
-# or explicitly:
-uv run python app.py --mode flexible
-```
-
-### Protected mode
+### Protected mode (default)
 
 Best for multi-user demos and shared environments. An admin generates signed, single-use activation links for each user. End users click the link to get a session -- they never choose their own ID.
 
 ```bash
+uv run python app.py
+# or explicitly:
 uv run python app.py --mode protected
+```
+
+### Flexible mode
+
+Best for solo testing and quick demos. The home page has a free-text input where you type any user ID to set your session.
+
+```bash
+uv run python app.py --mode flexible
 ```
 
 **Admin flow:**
 
-1. Visit `/admin` and enter the user ID + admin secret
-2. Copy the generated activation link
+1. Visit `/admin` and sign in with the admin secret (remembered for 30 days)
+2. Enter a user ID and copy the generated activation link
 3. Share the link with the user
 4. The user clicks the link, which sets their session cookie automatically
 
@@ -99,10 +99,12 @@ https://your-ngrok-url.ngrok-free.app/auth/verify
 
 | Route | Method | Modes | Description |
 |---|---|---|---|
-| `/` | GET, POST | Both | Home page (shows input form in flexible, status only in protected) |
+| `/` | GET, POST | Both | Home page (input form in flexible, status in protected) |
 | `/auth/verify` | GET | Both | Verifier endpoint (called by Arcade) |
-| `/admin` | GET, POST | Protected | Admin page to generate activation links |
-| `/auth/activate` | GET | Protected | Activates a session from a signed JWT link |
+| `/auth/activate` | GET | Both | Activates a session from a signed JWT link |
+| `/admin/login` | GET, POST | Protected | Admin sign-in (cookie-based, 30-day expiry) |
+| `/admin` | GET, POST | Protected | Generate activation links (requires admin login) |
+| `/logout` | POST | Both | Clears the user session |
 
 ## How verification works
 
